@@ -1,0 +1,58 @@
+﻿@using Cinema.DataAccess
+@using Cinema.Web.Helpers
+@model Cinema.Web.Models.ProfileViewModel
+
+@{
+    ViewBag.Title = "My profile";
+}
+
+<div class="page-header">
+    <h1>Profile: <strong>@User.Identity.Name</strong></h1>
+</div>
+<div class="row">
+    <div class="col-sm-3">
+        @if (Model.ImageBytes == null)
+        {
+            <img class="img-responsive" src="@Url.Content("~/Content/images/default_person_image.png")"/>
+        }
+        else
+        {
+            <img class="img-responsive" src="data:image; base64, @Convert.ToBase64String(Model.ImageBytes)"/>
+        }
+    </div>
+    <div class="col-sm-6">
+        <div class="row">
+            @Html.LabelFor(x => x.Name, new {@class = "control-label col-sm-2"})
+            @Model.Name
+        </div>
+        <div class="row">
+            @Html.LabelFor(x => x.Surname, new {@class = "control-label col-sm-2"})
+            @Model.Surname
+        </div>
+        @if (Model.Phone != null)
+        {
+            <div class="row">
+                @Html.LabelFor(x => x.Phone, new {@class = "control-label col-sm-2"})
+                @Model.Phone
+            </div>
+        }
+    </div>
+    <div class="col-sm-3">
+        @using (Html.BeginForm("AttachExternalAccount", "Account", new {ReturnUrl = Url.Action("MyProfile")}))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Partial("_AttachExternalAccount", (List<ExternalProvider>) ViewBag.NonAttachedExternalProviders)
+        }
+    </div>
+</div>
+@if (User.IsAdmin())
+{
+    <hr />
+    <h4><a href="@Url.Action("AdminPage")"><span class="glyphicon glyphicon-fire"></span> Administrator page</a></h4>
+}
+<hr />
+<h4><a href="@Url.Action("MyTickets")"><span class="glyphicon glyphicon-tags"></span> My tickets</a></h4>
+<hr />
+<h4><a href="@Url.Action("EditProfile")"><span class="glyphicon glyphicon-edit"></span> Edit profile</a></h4>
+<hr />
+<h4><a href="@Url.Action("ChangePassword")"><span class="glyphicon glyphicon-retweet"></span> Change password</a></h4>

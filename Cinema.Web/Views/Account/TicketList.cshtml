@@ -1,0 +1,82 @@
+﻿@using Cinema.Web.Helpers
+@using Cinema.Web.Models
+
+@model List<TicketViewModel>
+
+@if (Model.Count > 0)
+{
+    foreach (TicketViewModel ticket in Model)
+    {
+        string panelClass;
+        string type;
+        switch (ticket.Seat.Type)
+        {
+            case (int) SeatType.Single:
+                type = SeatType.Single.ToString();
+                panelClass = "panel-primary";
+                break;
+            case (int) SeatType.Double:
+                type = SeatType.Double.ToString();
+                panelClass = "panel-info";
+                break;
+            case (int) SeatType.Single4D:
+                type = SeatType.Single4D.ToString();
+                panelClass = "panel-danger";
+                break;
+            default:
+                type = "undefined";
+                panelClass = "panel-default";
+                break;
+        }
+        <div class="col-sm-6">
+            <div class="panel @panelClass">
+                <div class="panel-heading text-center">
+                    <strong>Ticket</strong>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3>Movie: @ticket.MovieName</h3>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Date: @ticket.Date.ToShortDateString()
+                        </div>
+                        <div class="col-sm-4">
+                            Time: @ticket.Time
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Hall: @ticket.HallName
+                        </div>
+                        <div class="col-sm-4">
+                            Type: @type
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Place: @ticket.Seat.Place
+                        </div>
+                        <div class="col-sm-4">
+                            Row: @ticket.Seat.Row
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <strong>Price:</strong> @($"{ticket.Price:0.00}") (UAH)
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>There are no tickets!</h3>
+        </div>
+    </div>
+}

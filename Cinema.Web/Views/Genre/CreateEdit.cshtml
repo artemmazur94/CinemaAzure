@@ -1,0 +1,42 @@
+﻿@model Cinema.Web.Models.GenreViewModel
+
+@{
+    var operation = Model.Id > 0 ? "Edit" : "Create";
+    ViewBag.Title = operation + " genre";
+}
+
+<script src="~/Scripts/Custom/cusotm_validators.js"></script>
+<script src="~/Scripts/Custom/genre_create_edit.js"></script>
+
+<div class="page-header">
+    <h1>@operation genre</h1>
+</div>
+
+@using (Html.BeginForm("CreateEdit", "Genre", FormMethod.Post, new {@class = "form-horizontal", id="genre-create-edit-form"}))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.Partial("FormValidation")
+
+    @Html.HiddenFor(x => x.Id)
+
+    <div class="form-group">
+        @Html.LabelFor(x => x.Name, new {@class = "control-label col-sm-2"})
+        @Html.TextBoxFor(x => x.Name, new {@class = "form-control col-sm-4"})
+        <span class="help-block col-sm-6 hidden" id="name-label">Genre name is required. Check genre name for leading and trailing spaces.</span>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Description, new {@class = "control-label col-sm-2"})
+        @Html.TextAreaFor(x => x.Description, new {@class = "form-control col-sm-4", rows=10})
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input class="btn btn-success" type="button" value="@operation genre" id="submit-btn"/>
+        </div>
+    </div>
+}
+<hr />
+<div>
+    @Html.ActionLink("< Back to genre list", "Index")
+</div>
+

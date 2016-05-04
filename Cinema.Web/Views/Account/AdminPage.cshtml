@@ -1,0 +1,68 @@
+﻿@model Cinema.Web.Models.AdminPageViewModel
+
+@{
+    ViewBag.Title = "Administrator page";
+}
+
+<div class="page-header">
+    <h1>Administrator page</h1>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <h3>Avarage number of booked tickets on seance: <strong>@Model.AvarageNumberOfBookedTickets</strong></h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <h3>Number of seances this week: <strong>@Model.NumberOfSeancesThisWeek</strong>
+        </h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <h3>Movies this week:</h3>
+        @if (Model.MoviesThisWeek.Count > 0)
+        {
+            <ul class="list-group col-sm-5 col-sm-offset-1">
+                @foreach (var movie in Model.MoviesThisWeek)
+                {
+                    <li><h4>@movie</h4></li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>There is no movies this week.</p>
+        }
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <h3>Seances this week:</h3>
+        @if (Model.SeancesThisWeek.Count > 0)
+        {
+            foreach (var seance in Model.SeancesThisWeek)
+            {
+                <div class="col-sm-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading text-center">
+                            @seance.MovieName
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12"><strong>Seance id:</strong> @seance.Id</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12"><strong>Datetime:</strong> @seance.Date.ToShortDateString() @seance.Time</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>There is no movies this week.</p>
+        }
+    </div>
+</div>

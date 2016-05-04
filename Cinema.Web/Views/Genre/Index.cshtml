@@ -1,0 +1,53 @@
+﻿@using Cinema.Web.Helpers
+@model List<Cinema.Web.Models.GenreViewModel>
+
+@{
+    ViewBag.Title = "Genres";
+}
+
+<div class="page-header">
+    <h1>Genres</h1>
+</div>
+
+@if (User.IsAdmin())
+{
+    <a href="@Url.Action("Create", "Genre")"><span class="glyphicon glyphicon-plus"></span> Add genre</a>
+}
+
+@foreach (var item in Model)
+{
+    <hr/>
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="col-sm-8 col-sm-offset-2">
+                <h4>@item.Name</h4>
+            </div>
+            
+        </div>
+    </div>
+    if(!String.IsNullOrEmpty(item.Description))
+    {
+        <div class="row">
+            <div class="col-sm-8">
+                @Html.LabelFor(x => item.Description, new { @class = "col-sm-2" })
+                <div class="col-sm-10">
+                    @item.Description
+                </div>
+            </div>
+        </div>
+    }
+    if (User.IsAdmin())
+    {
+        <br/>
+        <div class="row col-sm-offset-2">
+            <div class="col-sm-2">
+                <a href="@Url.Action("Edit", "Genre", new {id = item.Id})"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Delete", "Genre", new {id = item.Id})"><span class="glyphicon glyphicon-remove"></span> Remove</a>
+            </div>
+        </div>
+    }
+
+}
+

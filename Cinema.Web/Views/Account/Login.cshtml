@@ -1,0 +1,48 @@
+﻿@using Cinema.Web.Models
+@model LoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<script src="~/Scripts/Custom/login.js"></script>
+
+<div class="page-header">
+    <h1>Login</h1>
+</div>
+<div class="row">
+    @using (Html.BeginForm("Login", "Account", new {ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal col-sm-9", id = "login-form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.Partial("FormValidation")
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.Username, new { @class = "control-label col-sm-2" })
+            @Html.TextBoxFor(x => x.Username, new { @class = "form-control col-sm-4" })
+            <span class="help-block col-sm-3 hidden" id="username-label">Username is required.</span>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Password, new { @class = "control-label col-sm-2" })
+            @Html.PasswordFor(x => x.Password, new { @class = "form-control col-sm-4" })
+            <span class="help-block col-sm-3 hidden" id="password-label">Password is required.</span>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.RememberMe, new { @class = "control-label col-sm-2" })
+            @Html.CheckBoxFor(x => x.RememberMe, new { @class = "checkbox", @style = "display: inline" })
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="button" class="btn btn-success" value="Login" id="submit-btn" />
+            </div>
+        </div>
+    }
+    <div class="col-sm-3">
+        @Html.Partial("_ExternalLoginPartial", new ExternalLoginListViewModel() { ReturnUrl = ViewBag.ReturnUrl})
+    </div>
+</div>
+
+<hr />
+<div>
+    <a href="@Url.Action("RestorePassword", "Account")"><span class="glyphicon glyphicon-wrench"></span> Restore password</a>
+</div>

@@ -1,0 +1,28 @@
+﻿@model Cinema.Web.Models.EmailViewModel
+
+@{
+    ViewBag.Title = "Provide email";
+}
+
+<script src="~/Scripts/Custom/cusotm_validators.js"></script>
+<script src="~/Scripts/Custom/email_provide.js"></script>
+
+<div class="page-header">
+    <h1>Provide email</h1>
+</div>
+
+@using (Html.BeginForm("EmailProvide", "Account", FormMethod.Post, new { @class = "form-horizontal", id = "email-provide-form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("FormValidation")
+    <div class="form-group">
+        @Html.LabelFor(x => x.Email, new { @class = "control-label col-sm-2" })
+        @Html.TextBoxFor(x => x.Email, new { @class = "form-control col-sm-4" })
+        <span class="help-block col-sm-6 hidden" id="email-label">Email is not valid.</span>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input type="button" class="btn btn-success" value="OK" id="submit-btn" />
+        </div>
+    </div>
+}

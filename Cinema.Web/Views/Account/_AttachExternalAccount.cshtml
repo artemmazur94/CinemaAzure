@@ -1,0 +1,33 @@
+﻿@using Cinema.DataAccess
+@using Cinema.Web.Helpers
+@model List<ExternalProvider>
+
+@if (Model.Count > 0)
+{
+    <h4>Attach external account:</h4>
+    <br/>
+    foreach (ExternalProvider provider in Model)
+    {
+        <div class="row">
+            <div class="col-sm-12">
+                @{
+                    string colorClass;
+                    if (provider.Name == ExternalProviders.Facebook.ToString())
+                    {
+                        colorClass = "btn-primary";
+                    }
+                    else if (provider.Name == ExternalProviders.Google.ToString())
+                    {
+                        colorClass = "btn-danger";
+                    }
+                    else
+                    {
+                        colorClass = "btn-default";
+                    }
+                }
+                <button type="submit" class="btn @colorClass col-sm-12" id="@provider.Name" name="provider" value="@provider.Name">@provider.Name</button>
+            </div>
+        </div>
+        <br/>
+    }
+}

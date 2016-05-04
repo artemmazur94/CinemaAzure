@@ -1,0 +1,12 @@
+﻿@using Cinema.Web.Helpers
+@model Cinema.DataAccess.SectorTypePrice
+
+<div class="form-group">
+    @Html.HiddenFor(x => x.SeatTypeId)
+    @Html.Label((SeatType) Model.SeatTypeId + " price: ", new {@class = "control-label col-sm-2"})
+    <div class="input-group col-sm-2" style="float: left;">
+        @Html.TextBoxFor(x => Model.Price, new {@class = "form-control col-sm-2 price-input", type = "number"})
+        <span class="input-group-addon">.00 (UAH)</span>
+    </div>
+    <span class="help-block col-sm-6 hidden">Prices is not valid.</span>
+</div>

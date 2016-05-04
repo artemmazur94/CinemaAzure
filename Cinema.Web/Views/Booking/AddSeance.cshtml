@@ -1,0 +1,64 @@
+﻿@model Cinema.Web.Models.AddSeanceViewModel
+
+@{
+    ViewBag.Title = "Add seance";
+}
+
+<script src="~/Scripts/Custom/cusotm_validators.js"></script>
+<script src="~/Scripts/Custom/add_seance.js"></script>
+<script type="text/javascript">
+    var ActionUrl = '@Url.Action("GetSeatTypes", "Booking")';
+</script>
+
+<div class="page-header">
+    <h1>Add seance</h1>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        @using (Html.BeginForm("AddSeance", "Booking", FormMethod.Post, new {@class = "form-horizontal", id = "add-seance-form"}))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.Partial("FormValidation")
+
+            @Html.HiddenFor(x => x.MovieId)
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.MovieName, new {@class = "control-label col-sm-2"})
+                @Html.TextBoxFor(x => x.MovieName, new {@class = "form-control col-sm-4", @readonly = "true"})
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.HallId, new {@class = "control-label col-sm-2"})
+                @Html.DropDownListFor(x => x.HallId, (SelectList) ViewBag.Halls, new {@class = "form-control col-sm-4"})
+            </div>
+            <div id="seat-prices-constainer">
+                @Html.Partial("_SeatTypePrices", Model.SeatTypePrices, new ViewDataDictionary
+                {
+                    TemplateInfo = new TemplateInfo() {HtmlFieldPrefix = nameof(Model.SeatTypePrices)}
+                })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.Date, new {@class = "control-label col-sm-2"})
+                @Html.TextBoxFor(x => x.Date, "{0:d}", new {@class = "form-control col-sm-4"})
+                <span class="help-block col-sm-6 hidden" id="date-label">Date is not valid.</span>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Time: </label>
+                @Html.TextBoxFor(x => x.Time, new {@class = "form-control col-sm-4", type = "time"})
+                <span class="help-block col-sm-6 hidden" id="time-label">Time is not valid.</span>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <input class="btn btn-success" type="button" value="Add seance" id="submit-btn"/>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<hr/>
+<div class="row">
+    <div class="col-sm-12">
+        @Html.ActionLink("< Back", "Seances", new { id = Model.MovieId })
+    </div>
+</div>

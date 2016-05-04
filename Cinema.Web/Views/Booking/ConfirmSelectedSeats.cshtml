@@ -1,0 +1,105 @@
+﻿@using Cinema.Web.Helpers
+@using Cinema.Web.Models
+@model SeanceViewModel
+
+@{
+    ViewBag.Title = "Confirm selected seats";
+}
+
+<div class="page-header">
+    <h1>Confirm selected seats</h1>
+</div>
+
+<br />
+<div class="jumbotron">
+    <h2>Confirm selected seats</h2>
+    <hr />
+    <h2>Movie: @Model.MovieName</h2>
+    <div class="row">
+        <div class="col-sm-4">
+            <h3>
+                <strong>Seance information: </strong>
+            </h3>
+        </div>
+        <div class="col-sm-8">
+            <br />
+            <div class="col-sm-6">
+                @Html.LabelFor(x => x.Date)
+                @Model.Date.ToShortDateString()
+            </div>
+            <div class="col-sm-6">
+                @Html.LabelFor(x => x.Time)
+                @Model.Time.ToString()
+            </div>
+            <div class="col-sm-6">
+                @Html.LabelFor(x => x.HallName)
+                @Model.HallName
+            </div>
+            <div class="col-sm-6">
+                @Html.LabelFor(x => x.Prices)
+                @String.Join(", ", Model.Prices.Select(x => $"{x.Price:0.00}")) (UAH)
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.SelectedSeats.Count == 0)
+{
+    <h3>
+        <strong>Error! </strong>There is no selected seats!
+    </h3>
+
+}
+else
+{
+    <div class="row">
+        @foreach (HallSeat seat in Model.SelectedSeats)
+        {
+            <div class="col-sm-3">
+                @{
+                    string panelClass;
+                    string type = "";
+                    decimal price = Model.Prices.Find(x => x.SeatTypeId == seat.Type).Price;
+                    switch (seat.Type)
+                    {
+                        case (int) SeatType.Single:
+                            panelClass = "panel-primary";
+                            type = SeatType.Single.ToString();
+                            break;
+                        case (int) SeatType.Double:
+                            panelClass = "panel-info";
+                            type = SeatType.Double.ToString();
+                            break;
+                        case (int) SeatType.Single4D:
+                            panelClass = "panel-danger";
+                            type = SeatType.Single4D.ToString();
+                            break;
+                        default:
+                            panelClass = "panel-default";
+                            break;
+                    }
+                }
+                <div class="panel @panelClass">
+                    <div class="panel-heading"><strong>Ticket</strong></div>
+                    <div class="panel-body">
+                        <strong>Row: </strong>@seat.Row
+                        <br/>
+                        <strong>Palce: </strong>@seat.Place
+                        <br/>
+                        <strong>Type: </strong>@type
+                    </div>
+                    <div class="panel-footer">
+                        <strong>Price: </strong>@price
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col-sm-4 pull-right">
+            <input type="button" class="btn btn-danger" value="Cancel selected tickets" onclick="location.href = '@Url.Action("CancelSelectedSeats", "Booking", new {seanceId = Model.Id})'" />
+            <input type="button" class="btn btn-success" value="Book tickets" onclick="location.href = '@Url.Action("BookTickets", new {seanceId = Model.Id})'" />
+        </div>
+    </div>
+}
+<hr />
+@Html.ActionLink("< Back to hall map", "SelectSeats", new { id = Model.Id })

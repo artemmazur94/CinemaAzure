@@ -1,0 +1,98 @@
+﻿@using Cinema.Web.Helpers
+@model IEnumerable<Cinema.Web.Models.MoviesListViewModel>
+
+@{
+    ViewBag.Title = "Movies";
+}
+
+<div class="page-header">
+    <h1>Movies</h1>
+</div>
+@if (User.IsAdmin())
+{
+    <a href="@Url.Action("Create", "Movie")"><span class="glyphicon glyphicon-plus"></span> Add movie</a>
+}
+
+@foreach (var item in Model)
+{
+    <hr/>
+    <div class="row">
+        <div class="col-sm-2">
+            @if (item.Photo == null)
+            {
+                <img class="img-responsive" src="@Url.Content("~/Content/images/default_movie_image.png")" />
+            }
+            else
+            {
+                <img class="img-responsive" src="@Url.Content(item.Photo.Path)" />
+            }
+        </div>
+        <div class="col-sm-10">
+            <div class="row" style="display: flex">
+                <div class="col-sm-4">
+                    <h3><strong>@item.Name</strong>
+                    </h3>
+                </div>
+                <div class="col-sm-4 pull-right" style="margin: auto">
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("Seances", "Booking", new { id = item.MovieId})'"><span class="glyphicon glyphicon-th-list"></span> Seances</button>
+                </div>
+            </div>
+            <hr/>
+            @if (!String.IsNullOrEmpty(item.GenreName))
+            {
+                <div class="row">
+                    <div class="col-sm-4">
+                        @Html.LabelFor(x => item.GenreName)
+                        @item.GenreName
+                    </div>
+                </div>
+            }
+            <div class="row">
+                <div class="col-sm-4">
+                    @Html.LabelFor(x => item.Length)
+                    @item.Length
+                </div>
+            </div>
+            @if (!String.IsNullOrEmpty(item.DirectorName))
+            {
+                <div class="row">
+                    <div class="col-sm-4">
+                        @Html.LabelFor(x => item.DirectorName)
+                        @item.DirectorName
+                    </div>
+                </div>
+            }
+            @if (item.ActorNames.Count > 0)
+            {
+                <div class="row">
+                    <div class="col-sm-8">
+                        @Html.LabelFor(x => item.ActorNames)
+                        @String.Join(", ", item.ActorNames)
+                    </div>
+                </div>
+            }
+            <div class="row">
+                <div class="col-sm-4">
+                    @Html.LabelFor(x => item.ReleaseDate)
+                    @item.ReleaseDate
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-sm-2">
+                    <a href="@Url.Action("Details", "Movie", new {id = item.MovieId})"><span class="glyphicon glyphicon-share"></span> Details</a>
+                </div>
+                @if (User.IsAdmin())
+                {
+                    <div class="col-sm-2">
+                        <a href="@Url.Action("Edit", "Movie", new {id = item.MovieId})"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+                    </div>
+                    <div class="col-sm-2">
+                        <a href="@Url.Action("Delete", "Movie", new {id = item.MovieId})"><span class="glyphicon glyphicon-remove"></span> Remove</a>
+                    </div>
+                }
+                
+            </div>
+        </div>
+    </div>
+}

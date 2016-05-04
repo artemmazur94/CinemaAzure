@@ -1,0 +1,153 @@
+﻿@using Cinema.DataAccess
+@using SeatType = Cinema.Web.Helpers.SeatType
+@model Cinema.Web.Models.SeanceViewModel
+
+@{
+    ViewBag.Title = "Book tickets";
+}
+
+<script src="~/Scripts/jquery.countdown.js"></script>
+<script src="~/Scripts/Custom/book_tickets.js"></script>
+<script type="text/javascript">
+    var ActionUrl = '@Url.Action("ChangePlaceStatus", "Booking")';
+    var seanceId = @Model.Id;
+</script>
+
+<br />
+<div class="jumbotron">
+    <h2>Book tickets on movie: @Model.MovieName</h2>
+    <hr/>
+    <div class="row">
+        <div class="col-sm-4">
+            <h3>
+                <strong>Seance information: </strong>
+            </h3>
+        </div>
+        <div class="col-sm-8">
+            <br/>
+            <div class="col-sm-6">
+                @Html.LabelFor(x => x.Date)
+                @Model.Date.ToShortDateString()
+            </div>
+            <div class="col-sm-6">
+                @Html.LabelFor(x => x.Time)
+                @Model.Time.ToString()
+            </div>
+            <div class="col-sm-6">
+                @Html.LabelFor(x => x.HallName)
+                @Model.HallName
+            </div>
+            <div class="col-sm-6">
+                @Html.LabelFor(x => x.Prices)
+                @String.Join(", ", Model.Prices.Select(x => $"{x.Price:0.00}")) (UAH)
+            </div>
+        </div>
+    </div>
+</div>
+@if (ViewBag.Message != null)
+{
+    <div class="panel panel-warning">
+        <div class="panel-heading"><strong>Warning!</strong></div>
+        <div class="panel-body">@ViewBag.Message</div>
+    </div>
+}
+@if (Model.HallPlan != null)
+{
+    <div class="row">
+        <div class="col-sm-12">
+            @*<div class="text-center">
+                <h3>You can book tickets before the time expires:</h3>
+                <h3 id="clock"></h3>
+            </div>*@
+            <hr/>
+            <div class="row">
+                <div class="col-sm-2 row">
+                    <button type="button" class="btn btn-primary seat"></button>
+                    <span> - single seats</span>
+                </div>
+                <div class="col-sm-2 row">
+                    <button type="button" class="btn btn-info seat"></button>
+                    <span> - double seats</span>
+                </div>
+                <div class="col-sm-2 row">
+                    <button type="button" class="btn btn-danger seat"></button>
+                    <span> - 4D seats</span>
+                </div>
+                <div class="col-sm-2 row">
+                    <button type="button" class="btn btn-default seat"></button>
+                    <span> - booked seats</span>
+                </div>
+                <div class="col-sm-2 row">
+                    <button type="button" class="btn btn-success seat"></button>
+                    <span> - selected seats</span>
+                </div>
+            </div>
+            <hr/>
+            <div class="hall">
+                @for (var i = Model.HallPlan.Count; i > 0; i--)
+                {
+                    <div class="hall-row">
+                        <span class="label label-default">Row @i</span>
+                        @for (var j = 1; j <= Model.HallPlan[i].Count; j++)
+                        {
+                            if (Model.Seats.Exists(x => x.Row == i && x.Place == j))
+                            {
+                                <button type="button" class="btn btn-default seat selected-seat disabled">@j</button>
+                            }
+                            else
+                            {
+                                int type = Model.HallPlan[i][j];
+                                if (Model.SelectedSeats.Exists(x => x.Row == i && x.Place == j))
+                                {
+                                    <button type="button" class="btn btn-success seat selected-seat" data-row="@i" data-place="@j" data-type="@type">@j</button>
+                                }
+                                else
+                                {
+                                    switch (type)
+                                    {
+                                        case (int) SeatType.Single:
+                                            <button type="button" class="btn btn-primary seat selected-seat" data-row="@i" data-place="@j" data-type="@type">@j</button>
+                                            break;
+                                        case (int) SeatType.Double:
+                                            <button type="button" class="btn btn-info seat selected-seat" data-row="@i" data-place="@j" data-type="@type">@j</button>
+                                            break;
+                                        case (int) SeatType.Single4D:
+                                            <button type="button" class="btn btn-danger seat selected-seat" data-row="@i" data-place="@j" data-type="@type">@j</button>
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                }
+            </div>
+            <hr/>
+            <div class="row">
+                @foreach (SectorTypePrice price in Model.Prices)
+                {
+                    <div class="col-sm-3">
+                        @switch (price.SeatTypeId)
+                        {
+                            case (int) SeatType.Single:
+                                <button type="button" class="btn btn-primary seat"></button>
+                                break;
+                            case (int) SeatType.Double:
+                                <button type="button" class="btn btn-info seat"></button>
+                                break;
+                            case (int) SeatType.Single4D:
+                                <button type="button" class="btn btn-danger seat"></button>
+                                break;
+                        }
+                        <span> - @($"{price.Price:0.00} (UAH)")</span>
+                    </div>
+                }
+            </div>
+            <hr/>
+            <div class="row pull-right">
+                <input type="button" class="btn btn-danger" value="Cancel selected tickets" onclick="location.href = '@Url.Action("CancelSelectedSeats", "Booking", new {seanceId = Model.Id})'"/>
+                <input type="button" class="btn btn-success" value="Book selected seats" onclick="location.href = '@Url.Action("ConfirmSelectedSeats", "Booking", new {id = Model.Id})'"/>
+            </div>
+
+        </div>
+    </div>
+}

@@ -1,0 +1,71 @@
+﻿@using Cinema.Web.Helpers
+@model IEnumerable<Cinema.Web.Models.PerosonListViewModel>
+
+@{
+    ViewBag.Title = "Persons";
+}
+
+<div class="page-header">
+    <h1>Persons</h1>
+</div>
+
+@if (User.IsAdmin())
+{
+    <a href="@Url.Action("Create", "Person")"><span class="glyphicon glyphicon-plus"></span> Add person</a>
+}
+
+@foreach (var item in Model)
+{
+    <hr />
+    <div class="row">
+        <div class="col-sm-2">
+            @if (item.Photo == null)
+            {
+                <img class="img-responsive" src="@Url.Content("~/Content/images/default_person_image.png")"/>
+            }
+            else
+            {
+                <img class="img-responsive" src="@Url.Content(item.Photo.Path)"/>
+            }
+        </div>
+        <div class="col-sm-10">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h3><strong>@item.Name</strong>
+                    </h3>
+                </div>
+            </div>
+            <hr/>
+            @if (item.ActorInMovies.Count > 0)
+            {
+                <div class="row">
+                    <div class="col-sm-8">
+                        @Html.LabelFor(x => item.ActorInMovies)
+                        @String.Join(", ", item.ActorInMovies)
+                    </div>
+                </div>
+            }
+            @if (item.DirectorOfMovies.Count > 0)
+            {
+                <div class="row">
+                    <div class="col-sm-8">
+                        @Html.LabelFor(x => item.DirectorOfMovies)
+                        @String.Join(", ", item.DirectorOfMovies)
+                    </div>
+                </div>
+            }
+            @if (User.IsAdmin())
+            {
+                <hr/>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <a href="@Url.Action("Edit", "Person", new {id = item.Id})"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+                    </div>
+                    <div class="col-sm-2">
+                        <a href="@Url.Action("Delete", "Person", new {id = item.Id})"><span class="glyphicon glyphicon-remove"></span> Remove</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
